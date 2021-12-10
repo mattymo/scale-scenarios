@@ -1,17 +1,23 @@
 ---
-  HeatStacks.create_and_delete_stack:
+  version: 2
+  title: RefApp create and destroy
+  description: >
+    Creates RefApp heat template and destroys it
+  subtasks:
     -
-      args:
-        template_path: "{{ current_path }}/refapp/templates/top.yaml"
-        output_key: "app_url"
-      runner:
-        type: "constant"
-        times: {{ load * 2 * times_multiplier_stack }}
-        concurrency: {{ load * 2 }}
-      context:
-        users:
-          tenants: {{ load }}
-          users_per_tenant: 3
-      sla:
-        failure_rate:
-          max: 0
+      HeatStacks.create_and_delete_stack:
+        -
+          args:
+            template_path: "{{ current_path }}/refapp/templates/top.yaml"
+            output_key: "app_url"
+          runner:
+            type: "constant"
+            times: {{ load * 2 * times_multiplier_stack }}
+            concurrency: {{ load * 2 }}
+          context:
+            users:
+              tenants: {{ load }}
+              users_per_tenant: 3
+          sla:
+            failure_rate:
+              max: 0

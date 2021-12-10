@@ -45,7 +45,7 @@ resources:
       save_private_key: false
 
   network:
-    type: ./fragments/Network.yaml
+    type: ./fragments/Network.yaml.template
     properties:
       database_network_cidr: { get_param: database_network_cidr }
       app_network_cidr: { get_param: app_network_cidr }
@@ -53,7 +53,7 @@ resources:
       dns_nameservers: { get_param: dns_nameservers }
 
   database:
-    type: ./fragments/DatabaseInstances.yaml
+    type: ./fragments/DatabaseInstances.yaml.template
     depends_on:
       - key_pair
     properties:
@@ -66,7 +66,7 @@ resources:
       public_network_id: { get_param: public_network_id }
 
   app:
-    type: ./fragments/AppInstances.yaml
+    type: ./fragments/AppInstances.yaml.template
     depends_on:
       - key_pair
     properties:
