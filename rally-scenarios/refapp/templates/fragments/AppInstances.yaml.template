@@ -51,7 +51,7 @@ resources:
       group: ungrouped
       config:
         str_replace:
-          template: { get_file: ../scripts/service_boot.sh }
+          template: { get_file: /var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh }
           params:
             $node_number: '01'
             $wait_condition_notify: { get_attr: [ wait_handle, curl_cli ] }
@@ -76,7 +76,7 @@ resources:
       group: ungrouped
       config:
         str_replace:
-          template: { get_file: ../scripts/service_boot.sh }
+          template: { get_file: /var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh }
           params:
             $node_number: '02'
             $wait_condition_notify: { get_attr: [ wait_handle, curl_cli ] }
@@ -101,7 +101,7 @@ resources:
       group: ungrouped
       config:
         str_replace:
-          template: { get_file: ../scripts/service_boot.sh }
+          template: { get_file: /var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh }
           params:
             $node_number: '03'
             $wait_condition_notify: { get_attr: [ wait_handle, curl_cli ] }
