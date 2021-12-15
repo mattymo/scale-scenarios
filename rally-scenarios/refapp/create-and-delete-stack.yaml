@@ -9,9 +9,8 @@
       scenario:
         HeatStacks.create_and_delete_stack:
           template_path: "{{ current_path }}/refapp/templates/top.yaml.template"
-          files:
-            - /var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh
-#            - /var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh: |
+#          files:
+#            - /var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh
 #                #!/bin/bash
 #                set -x
 #                # allow access to the local variables from prepare-metadata.py
