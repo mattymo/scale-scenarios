@@ -815,27 +815,12 @@ resources:
   ## END Database ##
 
 outputs:
-  database_private_ips:
-    description: Private IP addresses of the deployed database instances
-    value: { get_resource: database_private_ips }
-  app_private_ips:
-    description: Private IP addresses of the deployed app instances
-    value: { get_resource: app_private }
-  app_vip:
-    description: VIP address of application
-    value: { get_resource: app_vip }
-  app_floating_ips:
-    description: App instances floating IPs
-    value: { get_resource: app_floating_ips }
-  database_floating_ips:
-    description: Database instances floating IPs
-    value: { get_resource: database_floating_ips }
   app_url:
     description: API url for the reference application
     value:
       make_url:
         scheme: http
-        host: { get_resource: app_vip }
+        host: { get_attr: [ lb_floating, floating_ip_address ] }
         port: { get_param: app_port }
   app_private_ips:
     description: Private IP addresses of app nodes
