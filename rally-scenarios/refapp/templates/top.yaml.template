@@ -270,13 +270,13 @@ resources:
   random:
     type: OS::Heat::RandomString
     properties:
-      length: {get_param: [lengths, {get_param: index}]}
+      length: 10
 
   key_pair:
     type: OS::Nova::KeyPair
     properties:
       name: 
-        list_join: ['-', [{ get_param: key_name }, { get_param: random }]]
+        list_join: ['-', [{ get_param: key_name }, { get_resource: random }]]
       public_key: { get_param: cluster_public_key}
       save_private_key: false
 
