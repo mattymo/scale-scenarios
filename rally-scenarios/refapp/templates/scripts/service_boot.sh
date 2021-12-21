@@ -53,13 +53,13 @@ function wait_condition_send {
     local reason=${2:-\"empty\"}
     local data=${3:-\"empty\"}
     local data_binary="{\"status\": \"$status\", \"reason\": \"$reason\", \"data\": $data}"
-    echo "Trying to send signal to wait condition 5 times: $data_binary"
+    echo "Trying to send signal to wait condition 50 times: $data_binary"
     WAIT_CONDITION_NOTIFY_EXIT_CODE=2
     i=0
-    while (( ${WAIT_CONDITION_NOTIFY_EXIT_CODE} != 0 && ${i} < 5 )); do
+    while (( ${WAIT_CONDITION_NOTIFY_EXIT_CODE} != 0 && ${i} < 50 )); do
         $wait_condition_notify -k --data-binary "$data_binary" && WAIT_CONDITION_NOTIFY_EXIT_CODE=0 || WAIT_CONDITION_NOTIFY_EXIT_CODE=2
         i=$((i + 1))
-        sleep 1
+        sleep 5
     done
     if (( ${WAIT_CONDITION_NOTIFY_EXIT_CODE} !=0 && "${status}" == "SUCCESS" ))
     then
