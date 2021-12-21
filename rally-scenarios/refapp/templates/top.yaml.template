@@ -47,7 +47,7 @@ parameters:
     default: 'nova'
   key_name:
     type: string
-    default: 'refapp-sshkey'
+    default: 'refapp'
   volume_size:
     type: number
     description: The size of volume
@@ -111,82 +111,83 @@ resources:
 
   ## END Network ##
   ## START App ##
-  software_config_01:
+  app_software_config_01:
     type: OS::Heat::SoftwareConfig
     properties:
       group: ungrouped
       config:
         str_replace:
-          template: { get_param: service_boot_script }
-          #template: { get_file: /var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh }
-          #template: { get_file: https://github.com/mattymo/scale-scenarios/raw/master/rally-scenarios/refapp/templates/scripts/service_boot.sh }
+          #template: { get_param: service_boot_script }
+          template: { get_file: "/var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh" }
+          #template: { get_file: "https://github.com/mattymo/scale-scenarios/raw/master/rally-scenarios/refapp/templates/scripts/service_boot.sh" }
+          #template: { get_file: "./scripts/service_boot.sh" }
           params:
             $node_number: '01'
             $wait_condition_notify: { get_attr: [ wait_handle, curl_cli ] }
-            $node_01_ip: { get_attr: [private_server_01_port, fixed_ips, 0, ip_address] }
-            $node_02_ip: { get_attr: [private_server_02_port, fixed_ips, 0, ip_address] }
-            $node_03_ip: { get_attr: [private_server_03_port, fixed_ips, 0, ip_address] }
+            $node_01_ip: { get_attr: [app_private_server_01_port, fixed_ips, 0, ip_address] }
+            $node_02_ip: { get_attr: [app_private_server_02_port, fixed_ips, 0, ip_address] }
+            $node_03_ip: { get_attr: [app_private_server_03_port, fixed_ips, 0, ip_address] }
             $database_admin_password: { get_param: database_admin_password }
             $service_type: "app"
             $database_vip: { get_attr: [lb, vip_address ] }
             $app_docker_image: { get_param: app_docker_image }
             $app_port: { get_param: app_port }
 
-  install_config_agent_01:
+  app_install_config_agent_01:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
-      - config: {get_resource: software_config_01}
+      - config: {get_resource: app_software_config_01}
 
-  software_config_02:
+  app_software_config_02:
     type: OS::Heat::SoftwareConfig
     properties:
       group: ungrouped
       config:
         str_replace:
-          template: { get_param: service_boot_script }
+          template: { get_file: "/var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh" }
           params:
             $node_number: '02'
             $wait_condition_notify: { get_attr: [ wait_handle, curl_cli ] }
-            $node_01_ip: { get_attr: [private_server_01_port, fixed_ips, 0, ip_address] }
-            $node_02_ip: { get_attr: [private_server_02_port, fixed_ips, 0, ip_address] }
-            $node_03_ip: { get_attr: [private_server_03_port, fixed_ips, 0, ip_address] }
+            $node_01_ip: { get_attr: [app_private_server_01_port, fixed_ips, 0, ip_address] }
+            $node_02_ip: { get_attr: [app_private_server_02_port, fixed_ips, 0, ip_address] }
+            $node_03_ip: { get_attr: [app_private_server_03_port, fixed_ips, 0, ip_address] }
             $database_admin_password: { get_param: database_admin_password }
             $service_type: "app"
             $database_vip: { get_attr: [lb, vip_address ] }
             $app_docker_image: { get_param: app_docker_image }
             $app_port: { get_param: app_port }
 
-  install_config_agent_02:
+  app_install_config_agent_02:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
-      - config: {get_resource: software_config_02}
+      - config: {get_resource: app_software_config_02}
 
-  software_config_03:
+  app_software_config_03:
     type: OS::Heat::SoftwareConfig
     properties:
       group: ungrouped
       config:
         str_replace:
-          template: { get_param: service_boot_script }
+          template: { get_file: "/var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh" }
           params:
             $node_number: '03'
             $wait_condition_notify: { get_attr: [ wait_handle, curl_cli ] }
-            $node_01_ip: { get_attr: [private_server_01_port, fixed_ips, 0, ip_address] }
-            $node_02_ip: { get_attr: [private_server_02_port, fixed_ips, 0, ip_address] }
-            $node_03_ip: { get_attr: [private_server_03_port, fixed_ips, 0, ip_address] }
+            $node_01_ip: { get_attr: [app_private_server_01_port, fixed_ips, 0, ip_address] }
+            $node_02_ip: { get_attr: [app_private_server_02_port, fixed_ips, 0, ip_address] }
+            $node_03_ip: { get_attr: [app_private_server_03_port, fixed_ips, 0, ip_address] }
             $database_admin_password: { get_param: database_admin_password }
             $service_type: "app"
             $database_vip: { get_attr: [lb, vip_address ] }
             $app_docker_image: { get_param: app_docker_image }
             $app_port: { get_param: app_port }
 
-  install_config_agent_03:
+  app_install_config_agent_03:
     type: "OS::Heat::MultipartMime"
     properties:
       parts:
-      - config: {get_resource: software_config_03}
+      - config: {get_resource: app_software_config_03}
 
   app-server-01:
     type: OS::Nova::Server
@@ -195,7 +196,7 @@ resources:
     properties:
       image: { get_param: database_image }
       flavor: { get_param: database_flavor }
-#      key_name: { get_resource: key_pair }
+      key_name: { get_resource: key_pair }
       availability_zone: { get_param: instance_01_az }
       networks:
         - port: { get_resource: app_private_server_01_port }
@@ -204,16 +205,16 @@ resources:
 
   app-server-02:
     depends_on:
-      - server-01
+      - app-server-01
 #      - key_pair
     type: OS::Nova::Server
     properties:
       image: { get_param: database_image }
       flavor: { get_param: database_flavor }
-#      key_name: { get_param: key_name }
+      key_name: { get_resource: key_pair }
       availability_zone: { get_param: instance_02_az }
       networks:
-        - port: { get_resource: app-private_server_02_port }
+        - port: { get_resource: app_private_server_02_port }
       user_data_format: SOFTWARE_CONFIG
       user_data: { get_resource:  app_install_config_agent_02}
 
@@ -225,7 +226,7 @@ resources:
     properties:
       image: { get_param: database_image }
       flavor: { get_param: database_flavor }
-#      key_name: { get_param: key_name }
+      key_name: { get_resource: key_pair }
       availability_zone: { get_param: instance_03_az }
       networks:
         - port: { get_resource: app_private_server_03_port }
@@ -351,7 +352,7 @@ resources:
       group: ungrouped
       config:
         str_replace:
-          template: { get_param: service_boot_script }
+          template: { get_file: "/var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh" }
           params:
             $node_number: '01'
             $wait_condition_notify: { get_attr: [ wait_handle_01, curl_cli ] }
@@ -373,7 +374,7 @@ resources:
       group: ungrouped
       config:
         str_replace:
-          template: { get_param: service_boot_script }
+          template: { get_file: "/var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh" }
           params:
             $node_number: '02'
             $wait_condition_notify: { get_attr: [ wait_handle_0x, curl_cli ] }
@@ -395,7 +396,7 @@ resources:
       group: ungrouped
       config:
         str_replace:
-          template: { get_param: service_boot_script }
+          template: { get_file: "/var/lib/rally/data/rally-scenarios/rally-scenarios/refapp/templates/scripts/service_boot.sh" }
           params:
             $node_number: '03'
             $wait_condition_notify: { get_attr: [ wait_handle_0x, curl_cli ] }
@@ -418,7 +419,7 @@ resources:
     properties:
       image: { get_param: database_image }
       flavor: { get_param: database_flavor }
-#      key_name: { get_param: key_name }
+      key_name: { get_resource: key_pair }
       availability_zone: { get_param: instance_01_az }
       networks:
         - port: { get_resource: private_server_01_port }
@@ -433,7 +434,7 @@ resources:
     properties:
       image: { get_param: database_image }
       flavor: { get_param: database_flavor }
-#      key_name: { get_param: key_name }
+      key_name: { get_resource: key_pair }
       availability_zone: { get_param: instance_02_az }
       networks:
         - port: { get_resource: private_server_02_port }
@@ -448,7 +449,7 @@ resources:
     properties:
       image: { get_param: database_image }
       flavor: { get_param: database_flavor }
-#      key_name: { get_param: key_name }
+      key_name: { get_resource: key_pair }
       availability_zone: { get_param: instance_03_az }
       networks:
         - port: { get_resource: private_server_03_port }
@@ -621,10 +622,11 @@ outputs:
         port: { get_param: app_port }
   app_private_ips:
     description: Private IP addresses of app nodes
-    value: [ { get_attr: [private_server_01_port, fixed_ips, 0, ip_address] }, { get_attr: [private_server_02_port, fixed_ips, 0, ip_address] }, { get_attr: [private_server_03_port, fixed_ips, 0, ip_address] } ]
+    value: [ { get_attr: [app_private_server_01_port, fixed_ips, 0, ip_address] }, { get_attr: [app_private_server_02_port, fixed_ips, 0, ip_address] }, { get_attr: [app_private_server_03_port, fixed_ips, 0, ip_address] } ]
   app_vip:
     description: VIP address of app
     value: { get_attr: [ lb_floating, floating_ip_address ] }
   app_floating_ips:
     description: App instances floating IPs
-    value: [ {get_attr: [ server_01_floating_ip, floating_ip_address ]}, {get_attr: [ server_02_floating_ip, floating_ip_address ]}, {get_attr: [ server_03_floating_ip, floating_ip_address ]}]
+    value: [ {get_attr: [ app_server_01_floating_ip, floating_ip_address ]}, {get_attr: [ app_server_02_floating_ip, floating_ip_address ]}, {get_attr: [ app_server_03_floating_ip, floating_ip_address ]}]
+
